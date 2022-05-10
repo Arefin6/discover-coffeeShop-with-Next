@@ -19,6 +19,7 @@ export async function getStaticProps(staticProps) {
       },
     };
   }
+
   
   export async function getStaticPaths() {
     const paths = coffeeStoresData.map((coffeeStore) => {
