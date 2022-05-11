@@ -14,7 +14,6 @@ export async function getStaticProps(context) {
   }
 }
 
-
 export default function Home(props) {
    const handleBannerButtonClick = () =>{
      console.log("Hello");
@@ -54,8 +53,7 @@ export default function Home(props) {
             );
           })}  
           </div>
-          </div>)}
-                    
+          </div>)}           
       </main>
     </div>
   )

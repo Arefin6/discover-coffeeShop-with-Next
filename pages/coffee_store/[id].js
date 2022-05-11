@@ -42,7 +42,7 @@ export async function getStaticProps(staticProps) {
 
 const CoffeeStore = ({coffeeStore}) => {
     const router = useRouter();
-    const {name,address,neighbourhood,imgUrl} = coffeeStore;
+    const {name,location,imgUrl} = coffeeStore;
     return (
         <div className={styles.layout}>
         <Head>
@@ -79,7 +79,7 @@ const CoffeeStore = ({coffeeStore}) => {
                 height="24"
                 alt="places icon"
               />
-              <p className={styles.text}>{address}</p>
+              <p className={styles.text}>{location.address}</p>
             </div>
     
               <div className={styles.iconWrapper}>
@@ -89,7 +89,7 @@ const CoffeeStore = ({coffeeStore}) => {
                   height="24"
                   alt="near me icon"
                 />
-                <p className={styles.text}>{neighbourhood}</p>
+                <p className={styles.text}>{location.neighborhood}</p>
               </div>
 
             <div className={styles.iconWrapper}>

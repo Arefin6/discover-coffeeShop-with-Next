@@ -2,8 +2,6 @@ const getUrlForCoffeeStores = (latLong,query,limit) =>{
   return `https://api.foursquare.com/v3/places/nearby?ll=${latLong}&query=${query}&limit=${limit}`
 }
 
-
-
 export const fetchCoffeeStores = async ()=>{
     const latLong = "43.65267326999575,-79.39545615725015";
     const limit = 8
