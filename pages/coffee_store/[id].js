@@ -2,16 +2,16 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import coffeeStoresData from '../../data/coffee-stores.json';
 import styles from '../../styles/coffee-store.module.css';
 import cls from 'classnames';
+import { fetchCoffeeStores } from '../../libs/coffeeStores';
 
 
 export async function getStaticProps(staticProps) {
     const params = staticProps.params;
-  
-    const findCoffeeStoreById = coffeeStoresData.find((coffeeStore) => {
-      return coffeeStore.id.toString() === params.id; //dynamic id
+    const coffeeStores = await fetchCoffeeStores();
+    const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+      return coffeeStore.fsq_id.toString() === params.id; //dynamic id
     });
     return {
       props: {
@@ -22,10 +22,11 @@ export async function getStaticProps(staticProps) {
 
   
   export async function getStaticPaths() {
-    const paths = coffeeStoresData.map((coffeeStore) => {
+    const coffeeStores = await fetchCoffeeStores();
+    const paths = coffeeStores.map((coffeeStore) => {
       return {
         params: {
-          id: coffeeStore.id.toString(),
+          id: coffeeStore.fsq_id.toString(),
         },
       };
     });

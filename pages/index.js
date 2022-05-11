@@ -3,29 +3,14 @@ import Banner from '../components/Banner'
 import Image  from 'next/image'
 import styles from '../styles/Home.module.css'
 import Card from '../components/Card'
-// import coffeeStoresData from '../data/coffee-stores.json';
+import { fetchCoffeeStores } from '../libs/coffeeStores'
 
 export async function getStaticProps(context) {
 
-  const latLong = "43.65267326999575,-79.39545615725015";
-  const limit = 8
-  const query = 'coffee stores'
-
-
-  const options = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `${process.env.FOURSQUREAPIKEY}`
-    }
-  };
-  
-  const response  = await fetch(`https://api.foursquare.com/v3/places/nearby?ll=${latLong}&query=${query}&limit=${limit}`, options)
-  
-  const data = await response.json()
+  const coffeeStores = await fetchCoffeeStores()
 
   return {
-    props: {coffeeStores:data.results}, // will be passed to the page component as props
+    props: {coffeeStores}, // will be passed to the page component as props
   }
 }
 
@@ -60,8 +45,8 @@ export default function Home(props) {
           {props.coffeeStores.map(cs =>{
             return(
               <Card 
-              key={cs.id}
-              href={`/coffee_store/${cs.id}`}
+              key={cs.fsq_id}
+              href={`/coffee_store/${cs.fsq_id}`}
               names={cs.name}
               imageUrl={cs.imageUrl || 'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'}
               className={styles.Card}
