@@ -81,8 +81,9 @@ const CoffeeStore = ({coffeeStore}) => {
               />
               <p className={styles.text}>{location.address}</p>
             </div>
-    
-              <div className={styles.iconWrapper}>
+               
+              {location.neighborhood && 
+                <div className={styles.iconWrapper}>
                 <Image
                   src="/static/icons/nearMe.svg"
                   width="24"
@@ -91,6 +92,8 @@ const CoffeeStore = ({coffeeStore}) => {
                 />
                 <p className={styles.text}>{location.neighborhood}</p>
               </div>
+              } 
+              
 
             <div className={styles.iconWrapper}>
               <Image
