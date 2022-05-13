@@ -9,15 +9,18 @@ const getUrlForCoffeeStores = (latLong,query,limit) =>{
   return `https://api.foursquare.com/v3/places/nearby?ll=${latLong}&query=${query}&limit=${limit}`
 }
 
-export const fetchCoffeeStores = async ()=>{
-
-  unsplash.search.getPhotos({
-    query: 'cat',
-    page: 1,
+const getListOfCoffeeStorePhotos = async () => {
+  const photos = await unPlashApi.search.getPhotos({
+    query: "coffee shop",
     perPage: 10,
-    color: 'green',
-    orientation: 'portrait',
   });
+  const unsplashResults = photos.response?.results || [];
+  return unsplashResults.map((result) => result.urls["small"]);
+};
+
+export const fetchCoffeeStores = async ()=>{
+   
+    const photos = await getListOfCoffeeStorePhotos()
 
     const latLong = "43.65267326999575,-79.39545615725015";
     const limit = 8
@@ -34,5 +37,10 @@ export const fetchCoffeeStores = async ()=>{
     
     const data = await response.json()
 
-    return data.results;
+    return data.results.map((data,index) =>{
+      return{
+        ...data,
+        imageUrl: photos[index]
+      } 
+    });
   }
