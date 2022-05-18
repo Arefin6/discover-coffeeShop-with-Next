@@ -1,7 +1,7 @@
 import { createApi } from 'unsplash-js';
 
 const unPlashApi = createApi({
-  accessKey: process.env.UNSPLASHACCESSKEY,
+  accessKey: process.env.NEXT_PUBLIC_UNSPLASHACCESSKEY,
   //...other fetch options
 });
 
@@ -18,18 +18,16 @@ const getListOfCoffeeStorePhotos = async () => {
   return unsplashResults.map((result) => result.urls["small"]);
 };
 
-export const fetchCoffeeStores = async ()=>{
+export const fetchCoffeeStores = async (latLong = "43.65267326999575,-79.39545615725015")=>{
    
     const photos = await getListOfCoffeeStorePhotos()
-
-    const latLong = "43.65267326999575,-79.39545615725015";
     const limit = 8
     const query = 'coffee stores' 
     const options = {
       method: 'GET',
       headers: {
         Accept: 'application/json',
-        Authorization: `${process.env.FOURSQUREAPIKEY}`
+        Authorization: `${process.env.NEXT_PUBLIC_FOURSQUREAPIKEY}`
       }
     };
     

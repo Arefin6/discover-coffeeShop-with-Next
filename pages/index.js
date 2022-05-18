@@ -1,23 +1,46 @@
-import Head from 'next/head'
-import Banner from '../components/Banner'
-import Image  from 'next/image'
-import styles from '../styles/Home.module.css'
-import Card from '../components/Card'
-import { fetchCoffeeStores } from '../libs/coffeeStores'
+import Head from "next/head";
+import Banner from "../components/Banner";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import Card from "../components/Card";
+import { fetchCoffeeStores } from "../libs/coffeeStores";
+import useTrackLocation from "./../hooks/use-track-location";
+import { useEffect } from "react";
 
 export async function getStaticProps(context) {
-
-  const coffeeStores = await fetchCoffeeStores()
+  const coffeeStores = await fetchCoffeeStores();
 
   return {
-    props: {coffeeStores}, // will be passed to the page component as props
-  }
+    props: { coffeeStores }, // will be passed to the page component as props
+  };
 }
 
 export default function Home(props) {
-   const handleBannerButtonClick = () =>{
-     console.log("Hello");
-   }
+  const { locationErrorMsg, handleTrackLocation, latLong, isLocating } =
+    useTrackLocation();
+
+  // console.log({ latLong, locationErrorMsg });
+
+   useEffect(()=>{
+        const fetchCoffeeStores = async (latLong) =>{
+            try {
+             const fetchedCoffeeStores = await fetchCoffeeStores(latLong);
+             console.log(fetchedCoffeeStores)
+            } catch (error) {
+              console.log({error})
+            }
+        }
+        if(latLong){
+          fetchCoffeeStores(latLong) 
+        }
+        
+   },[latLong])
+
+   
+
+  const handleBannerButtonClick = () => {
+    handleTrackLocation();
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -27,10 +50,13 @@ export default function Home(props) {
       </Head>
 
       <main className={styles.main}>
-      
-          <Banner bannerButtonText="View Stores nearby" handleOnClick={handleBannerButtonClick}/>
+        <Banner
+          bannerButtonText={isLocating ? "Locating..." : "View Stores nearby"}
+          handleOnClick={handleBannerButtonClick}
+        />
 
-          <div className={styles.heroImage}>
+        {locationErrorMsg && <p>Something Went Wrong : {locationErrorMsg}</p>}
+        <div className={styles.heroImage}>
           <Image
             src="/static/hero-image.png"
             width={700}
@@ -38,23 +64,28 @@ export default function Home(props) {
             alt="hero image"
           />
         </div>
-          {props.coffeeStores.length >0 && (<div>
+        {props.coffeeStores.length > 0 && (
+          <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Toronto Stores</h2>
-          <div className={styles.cardLayout}>
-          {props.coffeeStores.map(cs =>{
-            return(
-              <Card 
-              key={cs.fsq_id}
-              href={`/coffee_store/${cs.fsq_id}`}
-              names={cs.name}
-              imageUrl={cs.imageUrl || 'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'}
-              className={styles.Card}
-            /> 
-            );
-          })}  
+            <div className={styles.cardLayout}>
+              {props.coffeeStores.map((cs) => {
+                return (
+                  <Card
+                    key={cs.fsq_id}
+                    href={`/coffee_store/${cs.fsq_id}`}
+                    names={cs.name}
+                    imageUrl={
+                      cs.imageUrl ||
+                      "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+                    }
+                    className={styles.Card}
+                  />
+                );
+              })}
+            </div>
           </div>
-          </div>)}           
+        )}
       </main>
     </div>
-  )
+  );
 }
