@@ -18,7 +18,7 @@ export async function getStaticProps(context) {
 
 export default function Home(props) {
 
-   const [coffeeStores,setCoffeeStores] = useState([])
+   const [fetchedcoffeeStores,setCoffeeStores] = useState([])
    const [coffeeStoresError,setCoffeeStoresError] = useState('')
 
   const { locationErrorMsg, handleTrackLocation, latLong, isLocating } =
@@ -74,9 +74,9 @@ export default function Home(props) {
           />
         </div>
 
-        {coffeeStores.length > 0 ? (
+        {fetchCoffeeStores.length > 0 ? (
           <div className={styles.sectionWrapper}>
-            <h2 className={styles.heading2}>Toronto Stores</h2>
+            <h2 className={styles.heading2}>Stores Near Me</h2>
             <div className={styles.cardLayout}>
               {props.coffeeStores.map((cs) => {
                 return (
