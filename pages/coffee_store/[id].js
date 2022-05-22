@@ -1,10 +1,13 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext,useState,useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/coffee-store.module.css';
 import cls from 'classnames';
 import { fetchCoffeeStores } from '../../libs/coffeeStores';
+import { StoreContext } from '../../context/store-context';
+import {isEmpty} from '../../utils';
 
 
 export async function getStaticProps(staticProps) {
@@ -20,8 +23,7 @@ export async function getStaticProps(staticProps) {
     };
   }
 
-  
-  export async function getStaticPaths() {
+export async function getStaticPaths() {
     const coffeeStores = await fetchCoffeeStores();
     const paths = coffeeStores.map((coffeeStore) => {
       return {
@@ -36,13 +38,28 @@ export async function getStaticProps(staticProps) {
     };
   }
 
-  const handleUpVoteButton =() =>{
-
-  }
-
-const CoffeeStore = ({coffeeStore}) => {
+const CoffeeStore = (initialProps) => {
     const router = useRouter();
+    const id = router.query.id;
+    const [coffeeStore,setCoffeeStore] = useState(initialProps.coffeeStore)
+    const {state:{coffeeStores}} = useContext(StoreContext)
+    
+    useEffect(()=>{
+     if(isEmpty(initialProps.coffeeStore)){
+       if(coffeeStores.length>0){
+        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+          return coffeeStore.fsq_id.toString() === id; //dynamic id
+        });
+        setCoffeeStore(findCoffeeStoreById);
+       }
+     }
+    },[id,coffeeStores,initialProps,coffeeStore])
+
     const {name,location,imageUrl} = coffeeStore;
+
+    const handleUpVoteButton =() =>{
+
+    }
     return (
         <div className={styles.layout}>
         <Head>
