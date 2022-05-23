@@ -34,15 +34,19 @@ export async function getStaticPaths() {
     });
     return {
       paths,
-      fallback: false,
+      fallback: true,
     };
   }
 
 const CoffeeStore = (initialProps) => {
     const router = useRouter();
     const id = router.query.id;
-    const [coffeeStore,setCoffeeStore] = useState(initialProps.coffeeStore)
-    const {state:{coffeeStores}} = useContext(StoreContext)
+    const [coffeeStore, setCoffeeStore] = useState(
+      initialProps.coffeeStore || {}
+    );
+    const {
+      state: { coffeeStores },
+    } = useContext(StoreContext);
     
     useEffect(()=>{
      if(isEmpty(initialProps.coffeeStore)){
@@ -53,9 +57,15 @@ const CoffeeStore = (initialProps) => {
         setCoffeeStore(findCoffeeStoreById);
        }
      }
-    },[id,coffeeStores,initialProps,coffeeStore])
+    },[id, initialProps, initialProps.coffeeStore, coffeeStores])
+
+   
 
     const {name,location,imageUrl} = coffeeStore;
+
+    if (router.isFallback) {
+      return <div>Loading...</div>;
+    }
 
     const handleUpVoteButton =() =>{
 

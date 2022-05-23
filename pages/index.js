@@ -73,7 +73,7 @@ export default function Home(props) {
           />
         </div>
 
-        {state.coffeeStores.length > 0 ? (
+        {state.coffeeStores.length > 0 &&
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Stores Near Me</h2>
             <div className={styles.cardLayout}>
@@ -93,9 +93,8 @@ export default function Home(props) {
               })}
             </div>
           </div>
-        ):(
-          coffeeStoresError ? <h2>{coffeeStoresError}</h2>: <h2>Unable To find Stores Near You</h2>
-        )}
+          }
+        {coffeeStoresError && <h2>{coffeeStoresError}</h2>}
 
         {props.coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
