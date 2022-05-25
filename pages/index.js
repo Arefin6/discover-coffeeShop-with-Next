@@ -30,10 +30,11 @@ export default function Home(props) {
    useEffect(()=>{
     const fetchCoffeeStoresByLocation = async () =>{
         try {
-          const fetchedCoffeeStores = await fetchCoffeeStores(latLong);
+          const response = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&&limit=10`);
+          const coffeeStores = await response.json()
           dispatch({
             type:ACTION_TYPES.SET_COFFEE_STORES,
-            payload:{coffeeStores:fetchedCoffeeStores}
+            payload:{coffeeStores}
           })
            
          } catch (error) {

@@ -51,16 +51,17 @@ const CoffeeStore = (initialProps) => {
     useEffect(()=>{
      if(isEmpty(initialProps.coffeeStore)){
        if(coffeeStores.length>0){
-        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+        const coffeeStoreFromContext = coffeeStores.find((coffeeStore) => {
           return coffeeStore.fsq_id.toString() === id; //dynamic id
         });
-        setCoffeeStore(findCoffeeStoreById);
+        if(coffeeStoreFromContext){
+          setCoffeeStore(coffeeStoreFromContext);
+        }
        }
      }
     },[id, initialProps, initialProps.coffeeStore, coffeeStores])
 
-   
-
+  
     const {name,location,imageUrl} = coffeeStore;
 
     if (router.isFallback) {
