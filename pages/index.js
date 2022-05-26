@@ -19,7 +19,6 @@ export async function getStaticProps(context) {
 
 export default function Home(props) {
 
-  //  const [fetchedcoffeeStores,setCoffeeStores] = useState([])
    const [coffeeStoresError,setCoffeeStoresError] = useState('')
 
   const { locationErrorMsg, handleTrackLocation, isLocating } =
