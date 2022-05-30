@@ -40,6 +40,7 @@ export async function getStaticPaths() {
 
 const CoffeeStore = (initialProps) => {
     const router = useRouter();
+   
     const id = router.query.id;
     const [coffeeStore, setCoffeeStore] = useState(
       initialProps.coffeeStore || {}
@@ -61,12 +62,11 @@ const CoffeeStore = (initialProps) => {
             name,
             vote: 0,
             imageUrl:imageUrl,
-            neighborhood: location.neighborhood || "",
+            neighborhood: location.neighborhood[0] || "",
             address: location.address || "",
           }),
         });
         const dbCoffeeStore = await response.json();
-        console.log(dbCoffeeStore)
       } catch (err) {
         console.error("Error creating coffee store", err);
       }
@@ -90,12 +90,13 @@ const CoffeeStore = (initialProps) => {
       }
     },[id, initialProps, initialProps.coffeeStore, coffeeStores])
 
-  
-    const {name,location,imageUrl} = coffeeStore;
-
     if (router.isFallback) {
       return <div>Loading...</div>;
     }
+  
+    const {name,location,imageUrl} = coffeeStore;
+
+ 
 
     const handleUpVoteButton =() =>{
 
@@ -117,7 +118,10 @@ const CoffeeStore = (initialProps) => {
               <h1 className={styles.name}>{name}</h1>
             </div>
             <Image
-              src={imageUrl}
+              src={
+                imageUrl ||
+                "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+              }
               width={600}
               height={360}
               className={styles.storeImg}
