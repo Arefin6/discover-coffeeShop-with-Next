@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,7 +8,8 @@ import styles from '../../styles/coffee-store.module.css';
 import cls from 'classnames';
 import { fetchCoffeeStores } from '../../libs/coffeeStores';
 import { StoreContext } from '../../context/store-context';
-import {isEmpty} from '../../utils';
+import {fetcher, isEmpty} from '../../utils';
+import useSWR from 'swr';
 
 
 export async function getStaticProps(staticProps) {
@@ -40,7 +42,6 @@ export async function getStaticPaths() {
 
 const CoffeeStore = (initialProps) => {
     const router = useRouter();
-   
     const id = router.query.id;
     const [coffeeStore, setCoffeeStore] = useState(
       initialProps.coffeeStore || {}
@@ -51,7 +52,7 @@ const CoffeeStore = (initialProps) => {
     
     const handleCreateCoffeeStore = async (coffeeStore) => {
       try {
-        const { fsq_id, name, imageUrl,location } = coffeeStore;
+        const { fsq_id, name, imageUrl,location} = coffeeStore;
         const response = await fetch("/api/createCoffeeStore", {
           method: "POST",
           headers: {
@@ -94,12 +95,28 @@ const CoffeeStore = (initialProps) => {
       return <div>Loading...</div>;
     }
   
-    const {name,location,imageUrl} = coffeeStore;
+    const {name,imageUrl,location} = coffeeStore;
+
+    const [votingCount,setVotingCount] = useState(1);
+
+    const {data,error} = useSWR(`/api/getCoffeeStoreById?id=${id}`,fetcher)
+
+    useEffect(()=>{
+         if(data && data.length > 0){
+          console.log("hello From swr") 
+           setCoffeeStore(data[0])
+           setVotingCount(data[0].vote)  
+         }
+    },[data])
 
  
 
     const handleUpVoteButton =() =>{
 
+    }
+
+    if (error) {
+      return <div>Something went wrong retrieving coffee store page</div>;
     }
     return (
         <div className={styles.layout}>
@@ -137,10 +154,10 @@ const CoffeeStore = (initialProps) => {
                 height="24"
                 alt="places icon"
               />
-              <p className={styles.text}>{location.address}</p>
+              <p className={styles.text}>{location.address || address}</p>
             </div>
                
-              {location.neighborhood && 
+              {location.neighborhood || neighborhood && 
                 <div className={styles.iconWrapper}>
                 <Image
                   src="/static/icons/nearMe.svg"
@@ -148,7 +165,7 @@ const CoffeeStore = (initialProps) => {
                   height="24"
                   alt="near me icon"
                 />
-                <p className={styles.text}>{location.neighborhood}</p>
+                <p className={styles.text}>{ location.neighborhood ||neighborhood}</p>
               </div>
               } 
               
@@ -160,7 +177,7 @@ const CoffeeStore = (initialProps) => {
                 height="24"
                 alt="star icon"
               />
-              <p className={styles.text}>1</p>
+              <p className={styles.text}>{votingCount}</p>
             </div>
   
             <button className={styles.upVoteButton} onClick={handleUpVoteButton}>

@@ -32,8 +32,16 @@ export const fetchCoffeeStores = async (latLong = "43.65267326999575,-79.3954561
     };
     
     const response  = await fetch(getUrlForCoffeeStores(latLong,query,limit), options)
+
+    let data;
     
-    const data = await response.json()
+    if(response){
+       data = await response.json()
+    }
+    else{
+      return <div>Loading..</div>
+    }
+  
 
     return data.results.map((data,index) =>{
       return{
