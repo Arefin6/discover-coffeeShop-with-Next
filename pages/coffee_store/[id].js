@@ -46,6 +46,7 @@ const CoffeeStore = (initialProps) => {
     const [coffeeStore, setCoffeeStore] = useState(
       initialProps.coffeeStore || {}
     );
+    console.log(initialProps.coffeeStore)
     const {
       state: { coffeeStores },
     } = useContext(StoreContext);
@@ -63,13 +64,14 @@ const CoffeeStore = (initialProps) => {
             name,
             vote: 0,
             imageUrl:imageUrl,
-            neighborhood: location.neighborhood[0] || "",
+            neighborhood: location.neighborhood ? location.neighborhood[0] : "",
             address: location.address || "",
           }),
         });
         const dbCoffeeStore = await response.json();
+        console.log(dbCoffeeStore)
       } catch (err) {
-        console.error("Error creating coffee store", err);
+        console.log("Error creating coffee store", err);
       }
     }; 
 
@@ -95,7 +97,7 @@ const CoffeeStore = (initialProps) => {
       return <div>Loading...</div>;
     }
   
-    const {name,imageUrl,location} = coffeeStore;
+    const {name,imageUrl,location} = initialProps.coffeeStore;
 
     const [votingCount,setVotingCount] = useState(1);
 
@@ -154,10 +156,10 @@ const CoffeeStore = (initialProps) => {
                 height="24"
                 alt="places icon"
               />
-              <p className={styles.text}>{location.address || address}</p>
+              <p className={styles.text}>{location.address || coffeeStore.address}</p>
             </div>
                
-              {location.neighborhood || neighborhood && 
+              {location.neighborhood && 
                 <div className={styles.iconWrapper}>
                 <Image
                   src="/static/icons/nearMe.svg"
@@ -165,7 +167,7 @@ const CoffeeStore = (initialProps) => {
                   height="24"
                   alt="near me icon"
                 />
-                <p className={styles.text}>{ location.neighborhood ||neighborhood}</p>
+                <p className={styles.text}>{ location.neighborhood ||coffeeStore.neighborhood}</p>
               </div>
               } 
               
