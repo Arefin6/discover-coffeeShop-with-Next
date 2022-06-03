@@ -1,5 +1,5 @@
 import { useState,useContext } from "react";
-import { ACTION_TYPES,StoreContext } from "../context/store-context";
+import { ACTION_TYPES,StoreContext } from "../context/storeContext";
 
 const useTrackLocation = () =>{
 

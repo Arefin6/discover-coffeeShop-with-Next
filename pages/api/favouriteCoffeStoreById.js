@@ -8,10 +8,10 @@ const favouriteCoffeeStoreById = async(req,res) =>{
                const records = await findRecordByFilter(id);
                if(records.length !== 0){
                    const record = records[0];
-                   const calculateVoting = parseInt(record.vote)+1;
+                   const calculateVoting = parseInt(record.vote)+parseInt(1);
                    
                    const updateRecord = await table.update([{
-                       id:record.id,
+                       id:record.recordId,
                        fields:{
                           vote:calculateVoting 
                        },

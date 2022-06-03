@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import StoreProvider from "../context/store-context";
+import StoreProvider from "../context/storeContext";
 
 function MyApp({ Component, pageProps }) {
   return (

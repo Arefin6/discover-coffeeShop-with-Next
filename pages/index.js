@@ -7,7 +7,7 @@ import Card from "../components/Card";
 import { fetchCoffeeStores } from "../libs/coffeeStores";
 import useTrackLocation from "./../hooks/use-track-location";
 import { useEffect,useState,useContext } from "react";
-import { StoreContext, ACTION_TYPES } from "../context/store-context";
+import { StoreContext, ACTION_TYPES } from "../context/storeContext";
 
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
@@ -31,6 +31,12 @@ export default function Home(props) {
         try {
           const response = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&&limit=10`);
           const coffeeStores = await response.json()
+          if(coffeeStores.length === 0){
+            setCoffeeStoresError('No CoffeeStore Near you')
+          }
+          setTimeout(()=>{
+             setCoffeeStoresError('')
+          },2000)
           dispatch({
             type:ACTION_TYPES.SET_COFFEE_STORES,
             payload:{coffeeStores}
@@ -94,7 +100,7 @@ export default function Home(props) {
             </div>
           </div>
           }
-        {coffeeStoresError && <h2>{coffeeStoresError}</h2>}
+        {coffeeStoresError && <h2 className={styles.heading2}>{coffeeStoresError}</h2>}
 
         {props.coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
