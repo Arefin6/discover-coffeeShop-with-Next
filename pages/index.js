@@ -13,12 +13,13 @@ export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
 
   return {
-    props: { coffeeStores }, // will be passed to the page component as props
+    props: { coffeeStores : coffeeStores ? coffeeStores : [] }, // will be passed to the page component as props
   };
 }
 
 export default function Home(props) {
 
+  //  const [fetchedcoffeeStores,setCoffeeStores] = useState([])
    const [coffeeStoresError,setCoffeeStoresError] = useState('')
 
   const { locationErrorMsg, handleTrackLocation, isLocating } =
@@ -29,17 +30,10 @@ export default function Home(props) {
    useEffect(()=>{
     const fetchCoffeeStoresByLocation = async () =>{
         try {
-          const response = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&&limit=10`);
-          const coffeeStores = await response.json()
-          if(coffeeStores.length === 0){
-            setCoffeeStoresError('No CoffeeStore Near you')
-          }
-          setTimeout(()=>{
-             setCoffeeStoresError('')
-          },2000)
+          const fetchedCoffeeStores = await fetchCoffeeStores(latLong);
           dispatch({
             type:ACTION_TYPES.SET_COFFEE_STORES,
-            payload:{coffeeStores}
+            payload:{coffeeStores:fetchedCoffeeStores}
           })
            
          } catch (error) {
@@ -47,7 +41,7 @@ export default function Home(props) {
            setCoffeeStoresError(error.message) 
          }
         }
-      if(latLong){
+      if(latLong !== ''){
         fetchCoffeeStoresByLocation()
       }
    },[latLong])
@@ -79,7 +73,7 @@ export default function Home(props) {
           />
         </div>
 
-        {state.coffeeStores.length > 0 &&
+        {state.coffeeStores?.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Stores Near Me</h2>
             <div className={styles.cardLayout}>
@@ -99,10 +93,10 @@ export default function Home(props) {
               })}
             </div>
           </div>
-          }
+        )}
         {coffeeStoresError && <h2 className={styles.heading2}>{coffeeStoresError}</h2>}
 
-        {props.coffeeStores.length > 0 && (
+        {props.coffeeStores?.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Toronto Stores</h2>
             <div className={styles.cardLayout}>
